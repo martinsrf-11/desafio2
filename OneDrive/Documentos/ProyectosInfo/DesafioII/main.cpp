@@ -172,43 +172,35 @@ int main() {
     int opcion;
     do {
         cout << "\n=== Sistema de Alojamiento ===\n";
-        cout << "1. Registrar huesped\n";
-        cout << "2. Registrar anfitrion\n";
-        cout << "3. Ingresar como huesped\n";
-        cout << "4. Ingresar como anfitrion\n";
+        cout << "1. Ingresar como huesped\n";
+        cout << "2. Ingresar como anfitrion\n";
         cout << "0. Salir\n";
         cout << "Opcion: ";
         cin >> opcion;
 
         switch (opcion) {
-        case 1:
-            registrarHuesped();
-            break;
-        case 2:
-            registrarAnfitrion();
-            break;
-        case 3: {
+        case 1: {
             string doc;
             cout << "Documento del huesped: ";
             cin >> doc;
-            {
-                Huesped* h = buscarHuesped(doc);
-                if (h) menuHuesped(h);
-                else cout << "Huesped no encontrado.\n";
-            }
+            Huesped* h = buscarHuesped(doc);
+            if (h) menuHuesped(h);
+            else cout << "Huesped no encontrado.\n";
             break;
         }
-        case 4: {
+        case 2: {
             string doc;
             cout << "Documento del anfitrion: ";
             cin >> doc;
-            {
-                Anfitrion* a = buscarAnfitrion(doc);
-                if (a) menuAnfitrion(a);
-                else cout << "Anfitrion no encontrado.\n";
-            }
+            Anfitrion* a = buscarAnfitrion(doc);
+            if (a) menuAnfitrion(a);
+            else cout << "Anfitrion no encontrado.\n";
             break;
         }
+        case 0:
+            break;
+        default:
+            cout << "Opcion invalida.\n";
         }
     } while (opcion != 0);
 
@@ -217,7 +209,6 @@ int main() {
     guardarAlojamientos();
     guardarReservaciones();
 
-    // Liberar memoria
     for (auto h : huespedes) delete h;
     for (auto a : anfitriones) delete a;
     for (auto r : reservaciones) delete r;
