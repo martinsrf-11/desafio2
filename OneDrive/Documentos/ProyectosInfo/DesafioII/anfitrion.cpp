@@ -1,19 +1,16 @@
 #include "anfitrion.h"
-#include "alojamiento.h"
 
-Anfitrion::Anfitrion(const std::string& doc, int ant, float punt)
-    : Usuario(doc, ant, punt) {}
+Anfitrion::Anfitrion(std::string documento, int antiguedad, float puntuacion)
+    : Usuario(documento, antiguedad, puntuacion) {}
 
-Anfitrion::~Anfitrion() {
-    for (Alojamiento* alojamiento : alojamientos) {
-        delete alojamiento;
-    }
+void Anfitrion::agregarAlojamiento(Alojamiento* a) {
+    alojamientos.push_back(a);
 }
 
-void Anfitrion::agregarAlojamiento(Alojamiento* alojamiento) {
-    alojamientos.push_back(alojamiento);
-}
-
-const std::vector<Alojamiento*>& Anfitrion::getAlojamientos() const {
+std::vector<Alojamiento*> Anfitrion::getAlojamientos() const {
     return alojamientos;
+}
+
+std::string Anfitrion::getTipoUsuario() const {
+    return "Anfitrion";
 }

@@ -1,6 +1,6 @@
 #include "usuario.h"
 
-Usuario::Usuario(const std::string& doc, int ant, float punt)
+Usuario::Usuario(std::string doc, int ant, float punt)
     : documento(doc), antiguedad(ant), puntuacion(punt) {}
 
 Usuario::~Usuario() {}

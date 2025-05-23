@@ -1,3 +1,4 @@
+// main.cpp (continuación y modificaciones necesarias)
 #include <iostream>
 #include <vector>
 #include <fstream>
@@ -9,13 +10,25 @@
 
 using namespace std;
 
-// Variables globales para mantener los datos cargados
 vector<Huesped*> huespedes;
 vector<Anfitrion*> anfitriones;
 vector<Alojamiento*> alojamientos;
 vector<Reservacion*> reservaciones;
-void menuHuesped(Huesped* h);
-void menuAnfitrion(Anfitrion* a);
+
+void menuHuesped(Huesped* h) {
+    cout << "\n=== Menu Huesped ===\n";
+    cout << "Bienvenido, Huesped: " << h->getDocumento() << endl;
+    // Aquí se podrían agregar funcionalidades específicas del huésped
+    cout << "(Funcionalidad en desarrollo...)\n";
+}
+
+void menuAnfitrion(Anfitrion* a) {
+    cout << "\n=== Menu Anfitrion ===\n";
+    cout << "Bienvenido, Anfitrion: " << a->getDocumento() << endl;
+    // Aquí se podrían agregar funcionalidades específicas del anfitrión
+    cout << "(Funcionalidad en desarrollo...)\n";
+}
+
 // ================= FUNCIONES DE PERSISTENCIA =================
 
 void cargarHuespedes() {
@@ -31,7 +44,7 @@ void cargarHuespedes() {
 
         getline(iss, doc, '|');
         iss >> antig;
-        iss.ignore(1); // Saltar el '|'
+        iss.ignore(1);
         iss >> punt;
 
         huespedes.push_back(new Huesped(doc, antig, punt));
@@ -81,110 +94,134 @@ void guardarAnfitriones() {
     }
     file.close();
 }
-void menuHuesped(Huesped* h) {
-    int opcion;
-    do {
-        cout << "\n--- Menu Huesped ---\n";
-        cout << "1. Ver historial de reservas\n";
-        cout << "2. Buscar alojamiento (no implementado)\n";
-        cout << "0. Volver\n";
-        cout << "Opcion: ";
-        cin >> opcion;
 
-        switch (opcion) {
-        case 1:
-            for (auto r : h->getReservaciones()) {
-                cout << "- Reservacion codigo: " << r->getCodigo() << endl;
-            }
-            break;
-        case 2:
-            cout << "[Funcionalidad por implementar]\n";
-            break;
-        }
-
-    } while (opcion != 0);
+// NUEVO: guardar alojamientos y reservas
+void guardarAlojamientos() {
+    ofstream file("alojamientos.txt");
+    for (auto a : alojamientos) {
+        file << a->getCodigo() << "|";
+        file << a->getReservaciones().size() << "\n"; // Por ahora, solo ejemplo de cantidad
+    }
+    file.close();
 }
 
-void menuAnfitrion(Anfitrion* a) {
-    int opcion;
-    do {
-        cout << "\n--- Menu Anfitrion ---\n";
-        cout << "1. Registrar alojamiento (no implementado)\n";
-        cout << "2. Ver reservas (no implementado)\n";
-        cout << "0. Volver\n";
-        cout << "Opcion: ";
-        cin >> opcion;
-
-        switch (opcion) {
-        case 1:
-            cout << "[Funcionalidad por implementar]\n";
-            break;
-        case 2:
-            cout << "[Funcionalidad por implementar]\n";
-            break;
-        }
-
-    } while (opcion != 0);
+void guardarReservaciones() {
+    ofstream file("reservaciones.txt");
+    for (auto r : reservaciones) {
+        file << r->getCodigo() << "\n";
+    }
+    file.close();
 }
 
-// ================= FIN FUNCIONES DE PERSISTENCIA =================
+// ================= FUNCIONES PRINCIPALES =================
+
+void registrarHuesped() {
+    string doc;
+    int ant;
+    float punt;
+
+    cout << "Documento: ";
+    cin >> doc;
+    cout << "Antiguedad (meses): ";
+    cin >> ant;
+    cout << "Puntuacion (0.0 a 5.0): ";
+    cin >> punt;
+
+    Huesped* nuevo = new Huesped(doc, ant, punt);
+    huespedes.push_back(nuevo);
+    guardarHuespedes();
+    cout << "Huesped registrado.\n";
+}
+
+void registrarAnfitrion() {
+    string doc;
+    int ant;
+    float punt;
+
+    cout << "Documento: ";
+    cin >> doc;
+    cout << "Antiguedad (meses): ";
+    cin >> ant;
+    cout << "Puntuacion (0.0 a 5.0): ";
+    cin >> punt;
+
+    Anfitrion* nuevo = new Anfitrion(doc, ant, punt);
+    anfitriones.push_back(nuevo);
+    guardarAnfitriones();
+    cout << "Anfitrion registrado.\n";
+}
+
+Huesped* buscarHuesped(const string& doc) {
+    for (auto h : huespedes) {
+        if (h->getDocumento() == doc) return h;
+    }
+    return nullptr;
+}
+
+Anfitrion* buscarAnfitrion(const string& doc) {
+    for (auto a : anfitriones) {
+        if (a->getDocumento() == doc) return a;
+    }
+    return nullptr;
+}
 
 int main() {
-    // 1. Cargar datos al inicio (no visible para el usuario)
     cargarHuespedes();
     cargarAnfitriones();
 
-    int opcionPrincipal;
+    int opcion;
     do {
-        cout << "\n====== UdeAStay - Sistema de Reservas ======\n";
-        cout << "1. Ingresar como Huesped\n";
-        cout << "2. Ingresar como Anfitrion\n";
+        cout << "\n=== Sistema de Alojamiento ===\n";
+        cout << "1. Registrar huesped\n";
+        cout << "2. Registrar anfitrion\n";
+        cout << "3. Ingresar como huesped\n";
+        cout << "4. Ingresar como anfitrion\n";
         cout << "0. Salir\n";
-        cout << "Seleccione una opcion: ";
-        cin >> opcionPrincipal;
+        cout << "Opcion: ";
+        cin >> opcion;
 
-        if (opcionPrincipal == 1) {
+        switch (opcion) {
+        case 1:
+            registrarHuesped();
+            break;
+        case 2:
+            registrarAnfitrion();
+            break;
+        case 3: {
             string doc;
-            int antig;
-            float punt;
-
-            cout << "Documento: ";
+            cout << "Documento del huesped: ";
             cin >> doc;
-            cout << "Antiguedad (meses): ";
-            cin >> antig;
-            cout << "Puntuacion (0.0 a 5.0): ";
-            cin >> punt;
-
-            Huesped* h = new Huesped(doc, antig, punt);
-            huespedes.push_back(h);
-            menuHuesped(h);
-        } else if (opcionPrincipal == 2) {
-            string doc;
-            int antig;
-            float punt;
-
-            cout << "Documento: ";
-            cin >> doc;
-            cout << "Antiguedad (meses): ";
-            cin >> antig;
-            cout << "Puntuacion (0.0 a 5.0): ";
-            cin >> punt;
-
-            Anfitrion* a = new Anfitrion(doc, antig, punt);
-            anfitriones.push_back(a);
-            menuAnfitrion(a);
+            {
+                Huesped* h = buscarHuesped(doc);
+                if (h) menuHuesped(h);
+                else cout << "Huesped no encontrado.\n";
+            }
+            break;
         }
+        case 4: {
+            string doc;
+            cout << "Documento del anfitrion: ";
+            cin >> doc;
+            {
+                Anfitrion* a = buscarAnfitrion(doc);
+                if (a) menuAnfitrion(a);
+                else cout << "Anfitrion no encontrado.\n";
+            }
+            break;
+        }
+        }
+    } while (opcion != 0);
 
-    } while (opcionPrincipal != 0);
-
-    // 2. Guardar los datos actualizados al salir
     guardarHuespedes();
     guardarAnfitriones();
+    guardarAlojamientos();
+    guardarReservaciones();
 
     // Liberar memoria
     for (auto h : huespedes) delete h;
     for (auto a : anfitriones) delete a;
+    for (auto r : reservaciones) delete r;
+    for (auto a : alojamientos) delete a;
 
-    cout << "Gracias por usar UdeAStay.\n";
     return 0;
 }

@@ -1,19 +1,8 @@
 #include "huesped.h"
-#include "reservacion.h"
 
-Huesped::Huesped(const std::string& doc, int ant, float punt)
-    : Usuario(doc, ant, punt) {}
+Huesped::Huesped(std::string documento, int antiguedad, float puntuacion)
+    : Usuario(documento, antiguedad, puntuacion) {}
 
-Huesped::~Huesped() {
-    for (Reservacion* reserva : reservaciones) {
-        delete reserva;
-    }
-}
-
-void Huesped::agregarReservacion(Reservacion* reserva) {
-    reservaciones.push_back(reserva);
-}
-
-const std::vector<Reservacion*>& Huesped::getReservaciones() const {
-    return reservaciones;
+std::string Huesped::getTipoUsuario() const {
+    return "Huesped";
 }

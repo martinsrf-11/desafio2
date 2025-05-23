@@ -3,20 +3,16 @@
 
 #include "usuario.h"
 #include <vector>
-#include <string>
-
-class Alojamiento; // Declaración adelantada
+#include "alojamiento.h"
 
 class Anfitrion : public Usuario {
-private:
     std::vector<Alojamiento*> alojamientos;
-
 public:
-    Anfitrion(const std::string& doc, int ant, float punt);
-    ~Anfitrion();
+    Anfitrion(std::string documento, int antiguedad, float puntuacion);
 
-    void agregarAlojamiento(Alojamiento* alojamiento);
-    const std::vector<Alojamiento*>& getAlojamientos() const;
+    void agregarAlojamiento(Alojamiento* a);
+    std::vector<Alojamiento*> getAlojamientos() const;
+    std::string getTipoUsuario() const override;
 };
 
 #endif
